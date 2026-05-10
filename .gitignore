@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+.env
+
+# data/
+checkpoints/
+experiments/runs/
+
+# *.png
+# *.jpg
+# *.jpeg
+# *.npy
+# *.parquet
+!notebooks/**/*.png

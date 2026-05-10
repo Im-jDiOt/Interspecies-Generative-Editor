@@ -1,0 +1,18 @@
+device: cuda
+dtype: float16
+
+sd_path: runwayml/stable-diffusion-v1-5
+
+num_inference_steps: 30
+guidance_scale: 7.0
+height: 512
+width: 512
+
+memory:
+  # IP-Adapter는 cross-attention processor를 교체하는 방식으로 동작.
+  # attention_slicing을 켜면 그 processor가 SlicedAttnProcessor로 덮어써져서
+  # 'tuple' object has no attribute 'shape' 에러가 발생함.
+  # 16GB T4에서는 SD 1.5 + IP-Adapter는 slicing 없이도 충분.
+  attention_slicing: false
+  vae_slicing: true
+  cpu_offload: false

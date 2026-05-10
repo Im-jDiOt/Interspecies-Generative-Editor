@@ -1,0 +1,36 @@
+stage: 3
+pipeline: stage3_pose_aware
+
+ip_adapter:
+  repo: h94/IP-Adapter
+  subfolder: models
+  weight: ip-adapter-plus-face_sd15.bin
+  image_encoder: models/image_encoder
+
+controlnet:
+  repo: CrucibleAI/ControlNetMediaPipeFace
+  subfolder: diffusion_sd15
+  fallback_repo: lllyasviel/control_v11p_sd15_openpose
+  control_kind: facemesh        # facemesh | openpose
+
+faces_glob: data/faces/aligned/*.png
+landmark_cache_dir: data/faces/aligned
+
+prompt_template: "a {species_text} face, photorealistic portrait, detailed fur, looking at viewer"
+negative_prompt: "blurry, cartoon, deformed, multiple faces, low quality, text, watermark"
+
+species_text:
+  cat: cat
+  dog: dog
+  wild: wolf
+
+sweep:
+  ip_scale:         [0.3, 0.5, 0.7]
+  controlnet_scale: [0.3, 0.5, 0.7, 0.9]
+  species:          [cat, dog, wild]
+  seed:             [0, 1]
+
+output_dir: experiments/runs/stage3
+
+memory:
+  cpu_offload: true             # SD + IP-Adapter + ControlNet 동시 로드 시 보수적으로 켬
