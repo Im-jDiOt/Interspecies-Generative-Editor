@@ -1,0 +1,41 @@
+device: cuda
+dtype: float16
+sd_path: runwayml/stable-diffusion-v1-5
+num_inference_steps: 30
+guidance_scale: 7.0
+height: 512
+width: 512
+memory:
+  attention_slicing: false
+  vae_slicing: true
+  cpu_offload: false
+stage: 2
+pipeline: stage2_ipadapter
+ip_adapter:
+  repo: h94/IP-Adapter
+  subfolder: models
+  weight: ip-adapter-plus-face_sd15.bin
+  image_encoder: models/image_encoder
+faces_glob: data/faces/aligned/*.png
+prompt_template: a {species_text} face, photorealistic portrait, detailed fur, looking
+  at viewer
+negative_prompt: blurry, cartoon, deformed, multiple faces, low quality, text, watermark
+species_text:
+  cat: cat
+  dog: dog
+  wild: wolf
+sweep:
+  ip_scale:
+  - 0.0
+  - 0.3
+  - 0.5
+  - 0.7
+  - 0.9
+  species:
+  - cat
+  - dog
+  - wild
+  seed:
+  - 0
+  - 1
+output_dir: experiments/runs/stage2
